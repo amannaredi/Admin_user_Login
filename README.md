@@ -1,4 +1,4 @@
-# iLERNO-task
+# iLERNU-task
 
 This repository contains all codes for CRUD operations in Mongodb using nodejs express and mongoose.
 

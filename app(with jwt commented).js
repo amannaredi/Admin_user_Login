@@ -65,7 +65,7 @@ app.post("/register" , function(req, res){
             res.render("success-query" , {query : "Your record has been saved" })
         }
     }) 
-    // const token = JWT.sign({ email }, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000});
+    const token = JWT.sign({ email }, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000});
 });  
 
 data = []
@@ -96,38 +96,38 @@ app.post("/login", function(req, res){
         }
     })
     data.push(email , password)
-    // const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
+    const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
 })
 
-// let checkAuth = async (req, res, next) => {
-//     const token = req.header('x-auth-token')
-//     if(!token){
-//         res.status(401).json({
-//             errors: [
-//                 {
-//                     msg: "No token found"
-//                 }
-//             ]
-//         })
-//     }
+let checkAuth = async (req, res, next) => {
+    const token = req.header('x-auth-token')
+    if(!token){
+        res.status(401).json({
+            errors: [
+                {
+                    msg: "No token found"
+                }
+            ]
+        })
+    }
 
-//     try {
-//         const user = await JWT.verify(token, "nfb32iur32ibfqfvi3vf932bg932g932")
-//         req.user = user.email
-//         next()
-//     } 
-//     catch (error) {
-//         res.status(400).json({
-//             errors: [
-//                 {
-//                     msg: 'Invalid Token'
-//                 }
-//             ]
-//         })
-//     }
-// }
+    try {
+        const user = await JWT.verify(token, "nfb32iur32ibfqfvi3vf932bg932g932")
+        req.user = user.email
+        next()
+    } 
+    catch (error) {
+        res.status(400).json({
+            errors: [
+                {
+                    msg: 'Invalid Token'
+                }
+            ]
+        })
+    }
+}
 
-app.post("/deleteAccount" , function(req, res){
+app.post("/deleteAccount" ,checkAuth, function(req, res){
     User.find({email : data[0]}, function(err , foundUser){
         if(err){
             console.log(err)
@@ -151,7 +151,7 @@ app.post("/deleteAccount" , function(req, res){
     })
 })
 
-app.get("/ChangePassword", function(req, res){
+app.get("/ChangePassword",checkAuth, function(req, res){
     res.sendFile(__dirname + "/changePassword.html")
     console.log(data)
 })
@@ -220,7 +220,7 @@ app.post("/register-admin" , function(req, res){
             res.render("success-query" , {query : "Your record has been saved" })
         }
     }) 
-    // const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
+    const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
 });  
 
 
@@ -247,12 +247,12 @@ app.post("/login-admin", function(req, res){
         }
     })
     adm.push(email , password)
-    // const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
+    const token = JWT.sign({email}, "nfb32iur32ibfqfvi3vf932bg932g932", {expiresIn: 360000})
 
 
 })
 
-app.get("/ChangePassword-admin" , function(req, res){
+app.get("/ChangePassword-admin" ,checkAuth, function(req, res){
     res.sendFile(__dirname + "/changePassword-admin.html")
     console.log(data)
 })
@@ -300,7 +300,7 @@ app.post("/change-admin" , function(req,res){
 app.post("/delete-users-account", function(req , res){
     res.redirect("/delete")
 })
-app.get("/delete", function(req, res){
+app.get("/delete",checkAuth, function(req, res){
     res.render("delete-user")
 })
 app.post("/delete", function(req,res){
